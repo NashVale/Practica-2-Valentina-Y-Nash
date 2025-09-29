@@ -1,0 +1,49 @@
+% ---------Catálogo ---------
+% vehicle(Marca, Referencia, Tipo, Precio, Año).
+
+vehicle(toyota, corolla, sedan, 22000, 2022).
+vehicle(toyota, rav4, suv, 28000, 2023).
+vehicle(toyota, hilux, pickup, 35000, 2021).
+
+vehicle(ford, fiesta, sedan, 18000, 2020).
+vehicle(ford, ranger, pickup, 32000, 2022).
+vehicle(ford, mustang, sport, 45000, 2023).
+
+vehicle(bmw, serie3, sedan, 40000, 2021).
+vehicle(bmw, x5, suv, 60000, 2022).
+
+vehicle(honda, civic, sedan, 25000, 2022).
+vehicle(honda, crv, suv, 30000, 2023).
+
+
+vehicle(chevrolet, spark, sedan, 15000, 2021).
+vehicle(chevrolet, tracker, suv, 27000, 2022).
+vehicle(nissan, frontier, pickup, 34000, 2023).
+vehicle(nissan, versa, sedan, 19000, 2022).
+vehicle(mazda, cx5, suv, 31000, 2023).
+
+% ---------Consultas ---------
+% Filtrar por presupuesto
+meet_budget(Reference, BudgetMax) :-
+    vehicle(_, Reference, _, Price, _),
+    Price =< BudgetMax.
+
+% Listar vehículos por marca
+vehicles_by_brand(Brand, List) :-
+    findall(Ref, vehicle(Brand, Ref, _, _, _), List).
+
+% --------- Parte 3: Reportes ---------
+% Generar reporte de vehículos por marca y tipo dentro de un presupuesto
+generate_report(Brand, Type, Budget, (Vehicles, Total)) :-
+    findall((Ref, Price),
+            (vehicle(Brand, Ref, Type, Price, _), Price =< Budget),
+            Vehicles),
+    sum_prices(Vehicles, Total),
+    Total =< 1000000.
+
+% Auxiliar: sumar precios
+sum_prices([], 0).
+sum_prices([(_, P)|T], Total) :-
+    sum_prices(T, Subtotal),
+    Total is Subtotal + P.
+
